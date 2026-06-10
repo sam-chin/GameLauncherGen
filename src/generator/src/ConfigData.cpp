@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <codecvt>
 #include <locale>
-#include <zlib.h>
+
 
 // ============================================================================
 // 二进制结构构造函数

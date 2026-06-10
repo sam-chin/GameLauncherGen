@@ -12,6 +12,7 @@
 #include "PatchBuilder.h"
 #include <afxcmn.h>
 #include <afxwin.h>
+#include <afxdialogex.h>
 
 // 控件ID定义（与resource.h保持一致）
 enum MainDlgControls {

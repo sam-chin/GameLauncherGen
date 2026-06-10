@@ -22,6 +22,7 @@
 #include "ServerConfig.h"
 #include "LauncherUtils.h"
 #include <Windows.h>
+#include <shellapi.h>
 #include <iostream>
 #include <string>
 #include <vector>

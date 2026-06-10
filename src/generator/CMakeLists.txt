@@ -23,7 +23,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # MFC 静态链接
-set(CMAKE_MFC_FLAG 1)
+set(CMAKE_MFC_FLAG 2)
 
 # Unicode 编码
 add_definitions(-DUNICODE -D_UNICODE)

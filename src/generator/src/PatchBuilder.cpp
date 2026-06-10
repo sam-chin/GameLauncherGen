@@ -10,7 +10,7 @@
 #include <filesystem>
 #include <algorithm>
 #include <cstring>
-#include <zlib.h>
+
 
 namespace fs = std::filesystem;
 
@@ -311,23 +311,8 @@ bool CPatchBuilder::CompressData(
     const std::vector<uint8_t>& input,
     std::vector<uint8_t>& output
 ) {
-    if (input.empty()) {
-        output.clear();
-        return true;
-    }
-
-    // 计算最大输出大小
-    uLong maxOutputSize = compressBound(static_cast<uLong>(input.size()));
-    output.resize(maxOutputSize);
-
-    uLong actualSize = maxOutputSize;
-    int result = compress2(output.data(), &actualSize, input.data(), static_cast<uLong>(input.size()), m_compressionLevel);
-
-    if (result != Z_OK) {
-        return false;
-    }
-
-    output.resize(actualSize);
+    // 无第三方压缩库，直接复制数据（不压缩）
+    output = input;
     return true;
 }
 
