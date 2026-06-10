@@ -1,0 +1,76 @@
+/**
+ * @file ExtensionDLL.def
+ * @brief 模块定义文件（Module-Definition File）
+ * @details 本文件显式声明扩展DLL的导出符号，确保导出函数名称不经过C++编译器修饰（name mangling）。
+ *          这是实现稳定ABI（应用程序二进制接口）的关键手段：
+ *          - 防止不同编译器（MSVC、Clang-CL、MinGW）产生不同的修饰名
+ *          - 确保32位（x86）和64位（x64）构建使用一致的符号名（尽管本项目目标为x86）
+ *          - 与 .lib 导入库生成直接关联，主程序可通过导入库或显式 LoadLibrary + GetProcAddress 调用
+ *
+ *          虽然代码中已使用 extern "C" __declspec(dllexport)，.def 文件提供了额外的保障层，
+ *          并允许精确控制导出序号（ordinal）、私有符号等高级特性。
+ *
+ * @note 导出函数序号从 1 开始连续编号，便于通过序号快速导入（提升GetProcAddress性能）。
+ *       序号一旦确定，后续版本必须保持稳定，以维护向后兼容性。
+ *
+ * @version 1.0.0
+ * @date 2026-06-10
+ */
+
+/**
+ * @brief 导出的DLL名称
+ * @details 此名称将嵌入到生成的PE文件导出表中。
+ *          建议与实际输出文件名一致（不含扩展名）。
+ */
+LIBRARY ExtensionDLL
+
+/**
+ * @brief 导出符号声明段
+ * @details 每行声明一个导出函数，格式为：
+ *          函数名 [@序号] [NONAME] [PRIVATE]
+ *
+ *          当前使用的属性：
+ *          - @序号：为每个导出函数分配固定序号，便于通过序号导入
+ */
+EXPORTS
+
+    ; ==================== 核心生命周期接口 ====================
+    ; DllInit: 初始化扩展DLL模块
+    ; 调用约定: __stdcall
+    ; 参数: const EXTENSION_INIT_CONFIG* pConfig
+    ; 返回值: EXTENSION_RESULT (uint32_t)
+    DllInit             @1
+
+    ; DllUnInit: 反初始化扩展DLL模块
+    ; 调用约定: __stdcall
+    ; 参数: 无
+    ; 返回值: void
+    DllUnInit           @2
+
+    ; ==================== 版本与诊断接口 ====================
+    ; DllGetVersion: 获取扩展DLL的版本信息
+    ; 调用约定: __stdcall
+    ; 参数: uint32_t* pMajor, uint32_t* pMinor, uint32_t* pPatch
+    ; 返回值: uint32_t (打包版本号)
+    DllGetVersion       @3
+
+    ; DllGetLastErrorMessage: 获取最后一次错误的描述信息
+    ; 调用约定: __stdcall
+    ; 参数: 无
+    ; 返回值: const wchar_t* (指向线程局部缓冲区的指针)
+    DllGetLastErrorMessage @4
+
+    ; ==================== 钩子框架接口（占位） ====================
+    ; DllInstallHook: 安装指定类型的钩子
+    ; 调用约定: __stdcall
+    ; 参数: uint32_t hookType, HOOK_CALLBACK pCallback, void* pUserData
+    ; 返回值: EXTENSION_RESULT (uint32_t)
+    ; 当前状态: 占位实现，始终返回 EXT_ERROR_NOT_SUPPORTED
+    DllInstallHook      @5
+
+    ; DllUninstallHook: 卸载指定类型的钩子
+    ; 调用约定: __stdcall
+    ; 参数: uint32_t hookType
+    ; 返回值: EXTENSION_RESULT (uint32_t)
+    ; 当前状态: 占位实现，始终返回 EXT_ERROR_NOT_SUPPORTED
+    DllUninstallHook    @6

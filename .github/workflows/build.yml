@@ -1,0 +1,150 @@
+# =============================================================================
+# GitHub Actions CI/CD 工作流
+# GameLauncherGen - 32位游戏登录器生成器
+# =============================================================================
+# 触发条件:
+#   - push 到 main / develop 分支
+#   - pull_request 到 main 分支
+#   - 手动触发 (workflow_dispatch)
+# =============================================================================
+
+name: Build GameLauncherGen x86
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: '构建类型 (Debug/Release)'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Debug
+          - Release
+
+jobs:
+  build-x86:
+    name: Build Windows x86
+    runs-on: windows-latest
+    
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+    
+    steps:
+      # =====================================================================
+      # 步骤 1: 检出代码
+      # =====================================================================
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      # =====================================================================
+      # 步骤 2: 配置 MSVC 环境
+      # =====================================================================
+      - name: Setup MSVC
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x86
+      
+      # =====================================================================
+      # 步骤 3: 配置 CMake
+      # =====================================================================
+      - name: Configure CMake
+        run: |
+          cmake -B ${{github.workspace}}/build `
+            -A Win32 `
+            -DCMAKE_BUILD_TYPE=${{matrix.build_type}} `
+            -DCMAKE_SYSTEM_VERSION=10.0.19041.0
+      
+      # =====================================================================
+      # 步骤 4: 构建项目
+      # =====================================================================
+      - name: Build Project
+        run: |
+          cmake --build ${{github.workspace}}/build `
+            --config ${{matrix.build_type}} `
+            --parallel
+      
+      # =====================================================================
+      # 步骤 5: 验证构建产物
+      # =====================================================================
+      - name: Verify Build Outputs
+        run: |
+          Write-Host "=== 构建产物验证 ==="
+          $exePath = "${{github.workspace}}/build/src/generator/${{matrix.build_type}}/Generator.exe"
+          $launcherPath = "${{github.workspace}}/build/src/launcher_template/${{matrix.build_type}}/LauncherTemplate.exe"
+          $dllPath = "${{github.workspace}}/build/src/extension_dll/${{matrix.build_type}}/ExtensionDLL.dll"
+          
+          if (Test-Path $exePath) {
+            Write-Host "[OK] Generator.exe 存在"
+            $info = Get-Item $exePath
+            Write-Host "     大小: $($info.Length) bytes"
+          } else {
+            Write-Error "[FAIL] Generator.exe 未找到"
+          }
+          
+          if (Test-Path $launcherPath) {
+            Write-Host "[OK] LauncherTemplate.exe 存在"
+          } else {
+            Write-Error "[FAIL] LauncherTemplate.exe 未找到"
+          }
+          
+          if (Test-Path $dllPath) {
+            Write-Host "[OK] ExtensionDLL.dll 存在"
+          } else {
+            Write-Error "[FAIL] ExtensionDLL.dll 未找到"
+          }
+      
+      # =====================================================================
+      # 步骤 6: 上传构建产物
+      # =====================================================================
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameLauncherGen-x86-${{matrix.build_type}}
+          path: |
+            ${{github.workspace}}/build/src/generator/${{matrix.build_type}}/*.exe
+            ${{github.workspace}}/build/src/launcher_template/${{matrix.build_type}}/*.exe
+            ${{github.workspace}}/build/src/extension_dll/${{matrix.build_type}}/*.dll
+          retention-days: 7
+
+  # =========================================================================
+  # 发布任务 (仅在 push 到 main 分支时执行)
+  # =========================================================================
+  release:
+    name: Create Release
+    needs: build-x86
+    runs-on: windows-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{github.workspace}}/artifacts
+          pattern: GameLauncherGen-x86-*
+      
+      - name: Create Release Package
+        run: |
+          $releaseDir = "${{github.workspace}}/release"
+          New-Item -ItemType Directory -Force -Path $releaseDir
+          
+          # 复制 Release 构建产物
+          Copy-Item -Path "${{github.workspace}}/artifacts/GameLauncherGen-x86-Release/*" `
+            -Destination $releaseDir -Recurse
+          
+          # 创建 ZIP 包
+          Compress-Archive -Path "$releaseDir/*" `
+            -DestinationPath "${{github.workspace}}/GameLauncherGen-v${{github.run_number}}-x86.zip"
+      
+      - name: Upload Release Asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameLauncherGen-Release-v${{github.run_number}}
+          path: ${{github.workspace}}/GameLauncherGen-v${{github.run_number}}-x86.zip

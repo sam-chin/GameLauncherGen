@@ -1,0 +1,225 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+/**
+ * @file Generator.rc
+ * @brief 游戏启动器生成器 - 资源脚本
+ * @details 定义对话框模板、菜单、图标、字符串表等资源
+ */
+
+#define APSTUDIO_READONLY_SYMBOLS
+#include "afxres.h"
+#undef APSTUDIO_READONLY_SYMBOLS
+
+// ============================================================================
+// 图标资源
+// ============================================================================
+
+IDI_APP_ICON    ICON    "app.ico"
+
+// ============================================================================
+// 菜单资源
+// ============================================================================
+
+IDR_MAIN_MENU MENU
+BEGIN
+    POPUP "文件(&F)"
+    BEGIN
+        MENUITEM "退出(&X)\tAlt+F4",            ID_FILE_EXIT
+    END
+    POPUP "帮助(&H)"
+    BEGIN
+        MENUITEM "关于(&A)...",                 ID_HELP_ABOUT
+    END
+END
+
+// ============================================================================
+// 主对话框模板
+// ============================================================================
+
+IDD_MAIN_DIALOG DIALOGEX 0, 0, 800, 600
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | 
+      WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "游戏启动器生成器 v1.0"
+MENU IDR_MAIN_MENU
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    // 左侧区域 - 图片和UI风格
+    GROUPBOX        "UI风格与图片",IDC_GROUP_IMAGES,7,7,380,280
+    
+    LTEXT           "UI风格预设:",IDC_STATIC_UI_STYLE,15,22,60,10
+    COMBOBOX        IDC_COMBO_UI_STYLE,80,20,120,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    
+    LTEXT           "背景图片:",IDC_STATIC_BG_IMAGE,15,42,50,10
+    EDITTEXT        IDC_EDIT_BG_IMAGE,70,40,240,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_BG,315,40,40,13
+    
+    LTEXT           "按钮正常:",IDC_STATIC_BTN_NORMAL,15,58,50,10
+    EDITTEXT        IDC_EDIT_BTN_NORMAL,70,56,240,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_BTN_NORMAL,315,56,40,13
+    
+    LTEXT           "按钮悬停:",IDC_STATIC_BTN_HOVER,15,74,50,10
+    EDITTEXT        IDC_EDIT_BTN_HOVER,70,72,240,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_BTN_HOVER,315,72,40,13
+    
+    LTEXT           "按钮按下:",IDC_STATIC_BTN_PRESSED,15,90,50,10
+    EDITTEXT        IDC_EDIT_BTN_PRESSED,70,88,240,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_BTN_PRESSED,315,88,40,13
+    
+    LTEXT           "Logo图片:",IDC_STATIC_LOGO,15,106,50,10
+    EDITTEXT        IDC_EDIT_LOGO,70,104,240,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_LOGO,315,104,40,13
+    
+    LTEXT           "图片预览",IDC_STATIC_IMAGE_PREVIEW,15,125,340,155,SS_BLACKFRAME | SS_CENTER
+    
+    // 左侧下方 - 补丁打包
+    GROUPBOX        "补丁打包",IDC_GROUP_PATCH,7,292,380,130
+    
+    LTEXT           "源目录:",IDC_STATIC_PATCH_SOURCE,15,307,40,10
+    EDITTEXT        IDC_EDIT_PATCH_SOURCE,60,305,250,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_PATCH_SOURCE,315,305,40,13
+    
+    LTEXT           "加密密钥:",IDC_STATIC_PATCH_KEY,15,323,40,10
+    EDITTEXT        IDC_EDIT_PATCH_KEY,60,321,295,13,ES_AUTOHSCROLL | ES_PASSWORD
+    
+    LTEXT           "输出路径:",IDC_STATIC_PATCH_OUTPUT,15,339,40,10
+    EDITTEXT        IDC_EDIT_PATCH_OUTPUT,60,337,250,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_PATCH_OUTPUT,315,337,40,13
+    
+    PUSHBUTTON      "构建补丁包",IDC_BTN_BUILD_PATCH,15,358,80,15
+    CONTROL         "",IDC_PROGRESS_PATCH,"msctls_progress32",PBS_SMOOTH,100,358,200,15
+    LTEXT           "就绪",IDC_STATIC_PATCH_STATUS,305,360,60,10
+    
+    // 右侧区域 - 网络配置
+    GROUPBOX        "网络配置",IDC_GROUP_NETWORK,395,7,395,100
+    
+    LTEXT           "主服务器列表:",IDC_STATIC_PRIMARY_SERVER,403,22,60,10
+    EDITTEXT        IDC_EDIT_PRIMARY_SERVER,470,20,310,13,ES_AUTOHSCROLL
+    
+    LTEXT           "备用服务器列表:",IDC_STATIC_BACKUP_SERVER,403,38,60,10
+    EDITTEXT        IDC_EDIT_BACKUP_SERVER,470,36,310,13,ES_AUTOHSCROLL
+    
+    LTEXT           "补丁下载URL:",IDC_STATIC_PATCH_BASE_URL,403,54,60,10
+    EDITTEXT        IDC_EDIT_PATCH_BASE_URL,470,52,310,13,ES_AUTOHSCROLL
+    
+    LTEXT           "超时(秒):",IDC_STATIC_TIMEOUT,403,70,45,10
+    EDITTEXT        IDC_EDIT_TIMEOUT,450,68,40,13,ES_NUMBER
+    LTEXT           "重试次数:",IDC_STATIC_RETRY_COUNT,500,70,40,10
+    EDITTEXT        IDC_EDIT_RETRY_COUNT,545,68,40,13,ES_NUMBER
+    
+    // 右侧 - 业务URL
+    GROUPBOX        "业务URL",IDC_GROUP_BUSINESS,395,112,395,80
+    
+    LTEXT           "官方网站:",IDC_STATIC_OFFICIAL_SITE,403,127,45,10
+    EDITTEXT        IDC_EDIT_OFFICIAL_SITE,453,125,327,13,ES_AUTOHSCROLL
+    
+    LTEXT           "充值中心:",IDC_STATIC_RECHARGE_URL,403,143,45,10
+    EDITTEXT        IDC_EDIT_RECHARGE_URL,453,141,327,13,ES_AUTOHSCROLL
+    
+    LTEXT           "客服中心:",IDC_STATIC_CUSTOMER_SERVICE,403,159,45,10
+    EDITTEXT        IDC_EDIT_CUSTOMER_SERVICE,453,157,327,13,ES_AUTOHSCROLL
+    
+    LTEXT           "注册页面:",IDC_STATIC_REGISTER_URL,403,175,45,10
+    EDITTEXT        IDC_EDIT_REGISTER_URL,453,173,327,13,ES_AUTOHSCROLL
+    
+    // 右侧 - 更新策略
+    GROUPBOX        "更新策略",IDC_GROUP_UPDATE,395,197,395,75
+    
+    LTEXT           "更新策略:",IDC_STATIC_UPDATE_STRATEGY,403,212,40,10
+    COMBOBOX        IDC_COMBO_UPDATE_STRATEGY,448,210,120,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    
+    LTEXT           "冲突处理:",IDC_STATIC_CONFLICT_POLICY,580,212,40,10
+    COMBOBOX        IDC_COMBO_CONFLICT_POLICY,625,210,120,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    
+    CONTROL         "强制CRC校验",IDC_CHECK_FORCE_CRC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,403,230,80,10
+    CONTROL         "自动创建子目录",IDC_CHECK_AUTO_SUBDIR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,500,230,90,10
+    
+    // 右侧 - 路径配置
+    GROUPBOX        "路径配置",IDC_GROUP_PATHS,395,277,395,60
+    
+    LTEXT           "客户端路径:",IDC_STATIC_CLIENT_PATH,403,292,50,10
+    EDITTEXT        IDC_EDIT_CLIENT_PATH,458,290,332,13,ES_AUTOHSCROLL
+    
+    LTEXT           "扩展DLL:",IDC_STATIC_EXTENSION_DLL,403,308,50,10
+    EDITTEXT        IDC_EDIT_EXTENSION_DLL,458,306,290,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_EXTENSION_DLL,753,306,37,13
+    
+    // 右侧 - 生成配置
+    GROUPBOX        "生成配置",IDC_GROUP_GENERATE,395,342,395,80
+    
+    LTEXT           "模板EXE:",IDC_STATIC_TEMPLATE_PATH,403,357,45,10
+    EDITTEXT        IDC_EDIT_TEMPLATE_PATH,453,355,295,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_TEMPLATE,753,355,37,13
+    
+    LTEXT           "输出路径:",IDC_STATIC_OUTPUT_PATH,403,373,45,10
+    EDITTEXT        IDC_EDIT_OUTPUT_PATH,453,371,295,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览...",IDC_BTN_BROWSE_OUTPUT,753,371,37,13
+    
+    LTEXT           "嵌入策略:",IDC_STATIC_EMBED_STRATEGY,403,389,45,10
+    COMBOBOX        IDC_COMBO_EMBED_STRATEGY,453,387,200,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    
+    // 底部 - 生成按钮和进度
+    PUSHBUTTON      "生成启动器",IDC_BTN_GENERATE,395,430,100,25,BS_DEFPUSHBUTTON
+    CONTROL         "",IDC_PROGRESS_GENERATE,"msctls_progress32",PBS_SMOOTH,505,433,285,20
+    LTEXT           "就绪",IDC_STATIC_GENERATE_STATUS,395,460,395,10
+    
+    // 底部 - 日志区域
+    GROUPBOX        "操作日志",IDC_GROUP_LOG,7,430,380,160
+    EDITTEXT        IDC_EDIT_LOG,15,445,365,140,ES_MULTILINE | ES_AUTOVSCROLL | 
+                    ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL | NOT WS_BORDER
+    PUSHBUTTON      "清空日志",IDC_BTN_CLEAR_LOG,320,425,60,12
+END
+
+// ============================================================================
+// 字符串表
+// ============================================================================
+
+STRINGTABLE
+BEGIN
+    IDS_APP_TITLE           "游戏启动器生成器"
+    IDS_ERROR_TEMPLATE_NOT_FOUND "模板文件不存在"
+    IDS_ERROR_INVALID_CONFIG "配置验证失败"
+    IDS_SUCCESS_GENERATE    "启动器生成成功"
+    IDS_STATUS_READY        "就绪"
+    IDS_STATUS_GENERATING   "正在生成..."
+    IDS_STATUS_PACKING      "正在打包..."
+END
+
+// ============================================================================
+// 版本信息
+// ============================================================================
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "CompanyName", "Game Launcher Studio"
+            VALUE "FileDescription", "游戏启动器生成器"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "Generator.exe"
+            VALUE "LegalCopyright", "Copyright (C) 2024"
+            VALUE "OriginalFilename", "Generator.exe"
+            VALUE "ProductName", "游戏启动器生成器"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
