@@ -19,13 +19,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# 静态运行时库 (/MT) - 必须在 MFC 配置之前
+# 静态运行时库 (/MT)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
-# MFC 静态链接配置
-# 注意: CMAKE_MFC_FLAG 2 表示静态链接，但 CMake 仍可能添加 _AFXDLL
-# 我们使用 /U_AFXDLL 强制取消该定义
-set(CMAKE_MFC_FLAG 2)
 
 # Unicode 编码
 add_definitions(-DUNICODE -D_UNICODE)
@@ -35,9 +30,9 @@ add_definitions(-DWIN32 -D_WINDOWS)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-DVC_EXTRALEAN)
 add_definitions(-DWIN32_LEAN_AND_MEAN)
-
-# 禁用 Windows.h 的 min/max 宏，避免与 std::min/max 冲突
 add_definitions(-DNOMINMAX)
+add_definitions(-DAFXCTL_LIB)       # 链接 MFC 控件静态库
+add_definitions(-DAFXEXT_LIB)       # 链接 MFC 扩展静态库
 
 # 源文件
 set(GENERATOR_HEADERS
@@ -60,7 +55,7 @@ set(GENERATOR_RESOURCES
     res/Generator.rc
 )
 
-# 可执行文件目标
+# 可执行文件目标 - 注意: 不使用 CMAKE_MFC_FLAG
 add_executable(${PROJECT_NAME} WIN32
     ${GENERATOR_HEADERS}
     ${GENERATOR_SOURCES}
@@ -74,7 +69,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/include
 )
 
-# 编译选项 - 关键: /U_AFXDLL 取消 _AFXDLL 定义，强制使用静态 MFC
+# 编译选项 - 不使用 /U_AFXDLL，因为不使用 CMAKE_MFC_FLAG
 target_compile_options(${PROJECT_NAME} PRIVATE
     /W4
     /MP
@@ -82,7 +77,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     /GR
     /Zc:wchar_t
     /permissive-
-    /U_AFXDLL           # 强制取消 _AFXDLL 定义，使用静态 MFC
 )
 
 # Release 优化
@@ -92,17 +86,11 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
 # Debug 模式
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi /Od /RTC1")
 
-# MFC 静态链接链接器选项：排除冲突的默认库
-# afxnmcdd.lib (Unicode MFC Debug Static No Control Containers) 与 uafxcwd.lib 冲突
-# 只排除不带控件容器的版本，保留完整的 uafxcwd.lib
-target_link_options(${PROJECT_NAME} PRIVATE
-    $<$<CONFIG:Debug>:/NODEFAULTLIB:afxnmcdd.lib>
-    $<$<CONFIG:Release>:/NODEFAULTLIB:afxnmcw.lib>
-)
-
-# 链接库
+# 链接库 - MFC 静态库使用生成器表达式区分 Debug/Release
 target_link_libraries(${PROJECT_NAME} PRIVATE
     CommonLibrary
+    $<$<CONFIG:Debug>:nafxcwd.lib uafxcwd.lib>
+    $<$<CONFIG:Release>:nafxcw.lib uafxcw.lib>
     kernel32
     user32
     gdi32
@@ -119,6 +107,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     gdiplus
     shlwapi
     htmlhelp
+)
+
+# 排除 MFC 不带控件容器的版本（避免重复定义）
+target_link_options(${PROJECT_NAME} PRIVATE
+    $<$<CONFIG:Debug>:/NODEFAULTLIB:afxnmcdd.lib>
+    $<$<CONFIG:Release>:/NODEFAULTLIB:afxnmcw.lib>
 )
 
 # 资源编译器包含路径
@@ -139,5 +133,5 @@ install(TARGETS ${PROJECT_NAME}
 message(STATUS "========================================")
 message(STATUS "项目: ${PROJECT_NAME}")
 message(STATUS "版本: ${PROJECT_VERSION}")
-message(STATUS "MFC模式: 静态链接")
+message(STATUS "MFC模式: 静态链接 (手动配置)")
 message(STATUS "========================================")

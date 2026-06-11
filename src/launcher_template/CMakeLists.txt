@@ -39,8 +39,8 @@ set(LAUNCHER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Main.cpp
 )
 
-# 可执行程序目标
-add_executable(LauncherTemplate WIN32
+# 可执行程序目标（控制台应用，移除 WIN32 标志）
+add_executable(LauncherTemplate
     ${LAUNCHER_HEADERS}
     ${LAUNCHER_SOURCES}
 )
