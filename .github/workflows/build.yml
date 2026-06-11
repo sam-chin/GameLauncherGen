@@ -77,16 +77,16 @@ jobs:
       - name: Verify Build Outputs
         run: |
           Write-Host "=== 构建产物验证 ==="
-          $exePath = "${{github.workspace}}/build/src/generator/${{matrix.build_type}}/Generator.exe"
+          $exePath = "${{github.workspace}}/build/src/generator/${{matrix.build_type}}/GameLauncherGenerator.exe"
           $launcherPath = "${{github.workspace}}/build/src/launcher_template/${{matrix.build_type}}/LauncherTemplate.exe"
           $dllPath = "${{github.workspace}}/build/src/extension_dll/${{matrix.build_type}}/ExtensionDLL.dll"
           
           if (Test-Path $exePath) {
-            Write-Host "[OK] Generator.exe 存在"
+            Write-Host "[OK] GameLauncherGenerator.exe 存在"
             $info = Get-Item $exePath
             Write-Host "     大小: $($info.Length) bytes"
           } else {
-            Write-Error "[FAIL] Generator.exe 未找到"
+            Write-Error "[FAIL] GameLauncherGenerator.exe 未找到"
           }
           
           if (Test-Path $launcherPath) {
