@@ -19,11 +19,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# MFC 静态链接 (必须在 add_executable 之前)
-set(CMAKE_MFC_FLAG 2)
-
-# 静态运行时库 (/MT) - 与静态 MFC 一致
+# 静态运行时库 (/MT) - 必须在 MFC 配置之前
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+# MFC 静态链接配置
+# 注意: CMAKE_MFC_FLAG 2 表示静态链接，但 CMake 仍可能添加 _AFXDLL
+# 我们使用 /U_AFXDLL 强制取消该定义
+set(CMAKE_MFC_FLAG 2)
 
 # Unicode 编码
 add_definitions(-DUNICODE -D_UNICODE)
@@ -73,7 +75,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/include
 )
 
-# 编译选项
+# 编译选项 - 关键: /U_AFXDLL 取消 _AFXDLL 定义，强制使用静态 MFC
 target_compile_options(${PROJECT_NAME} PRIVATE
     /W4
     /MP
@@ -81,6 +83,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     /GR
     /Zc:wchar_t
     /permissive-
+    /U_AFXDLL           # 强制取消 _AFXDLL 定义，使用静态 MFC
 )
 
 # Release 优化
