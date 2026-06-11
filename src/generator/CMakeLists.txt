@@ -86,11 +86,11 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
 # Debug 模式
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi /Od /RTC1")
 
-# 链接库 - MFC 静态库使用生成器表达式区分 Debug/Release
+# 链接库 - MFC 静态库（只需链接完整版 uafxcw，不要同时链接 nafxcw）
 target_link_libraries(${PROJECT_NAME} PRIVATE
     CommonLibrary
-    $<$<CONFIG:Debug>:nafxcwd.lib uafxcwd.lib>
-    $<$<CONFIG:Release>:nafxcw.lib uafxcw.lib>
+    $<$<CONFIG:Debug>:uafxcwd.lib>
+    $<$<CONFIG:Release>:uafxcw.lib>
     kernel32
     user32
     gdi32
