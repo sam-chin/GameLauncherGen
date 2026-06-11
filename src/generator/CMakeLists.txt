@@ -35,6 +35,9 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-DVC_EXTRALEAN)
 add_definitions(-DWIN32_LEAN_AND_MEAN)
 
+# 禁用 Windows.h 的 min/max 宏，避免与 std::min/max 冲突
+add_definitions(-DNOMINMAX)
+
 # 源文件
 set(GENERATOR_HEADERS
     include/GeneratorApp.h

@@ -36,7 +36,8 @@ void CResourceEmbedder::SetProgressCallback(ProgressCallback callback) {
 void CResourceEmbedder::ReportProgress(int percentage, const std::wstring& status) {
     if (m_progressCallback) {
         // 限制百分比范围
-        percentage = std::max(0, std::min(100, percentage));
+        if (percentage < 0) percentage = 0;
+        if (percentage > 100) percentage = 100;
         m_progressCallback(percentage, status);
     }
 }

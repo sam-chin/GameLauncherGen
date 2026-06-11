@@ -5,6 +5,7 @@
  */
 
 #include "PatchBuilder.h"
+#include <Windows.h>
 #include <fstream>
 #include <iostream>
 #include <filesystem>

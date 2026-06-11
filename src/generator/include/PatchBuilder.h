@@ -66,7 +66,9 @@ public:
     /**
      * @brief 设置压缩级别 (0-9, 默认6)
      */
-    void SetCompressionLevel(int level) noexcept { m_compressionLevel = std::max(0, std::min(9, level)); }
+    void SetCompressionLevel(int level) noexcept {
+        m_compressionLevel = (level < 0) ? 0 : (level > 9) ? 9 : level;
+    }
 
     /**
      * @brief 设置加密密钥
