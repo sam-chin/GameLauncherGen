@@ -94,12 +94,10 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi /Od /RTC1")
 
 # MFC 静态链接链接器选项：排除冲突的默认库
-# uafxcwd.lib (Unicode MFC Debug Static) 与 afxnmcdd.lib (Unicode MFC Debug Static No Control Containers)
-# 可能冲突，使用 /NODEFAULTLIB 排除
+# afxnmcdd.lib (Unicode MFC Debug Static No Control Containers) 与 uafxcwd.lib 冲突
+# 只排除不带控件容器的版本，保留完整的 uafxcwd.lib
 target_link_options(${PROJECT_NAME} PRIVATE
-    $<$<CONFIG:Debug>:/NODEFAULTLIB:uafxcwd.lib>
     $<$<CONFIG:Debug>:/NODEFAULTLIB:afxnmcdd.lib>
-    $<$<CONFIG:Release>:/NODEFAULTLIB:uafxcw.lib>
     $<$<CONFIG:Release>:/NODEFAULTLIB:afxnmcw.lib>
 )
 
