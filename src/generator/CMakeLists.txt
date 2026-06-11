@@ -32,7 +32,6 @@ add_definitions(-DUNICODE -D_UNICODE)
 
 # Windows 平台定义
 add_definitions(-DWIN32 -D_WINDOWS)
-add_definitions(-D_AFX_NO_MFC_CONTROLS_IN_DIALOGS)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-DVC_EXTRALEAN)
 add_definitions(-DWIN32_LEAN_AND_MEAN)
