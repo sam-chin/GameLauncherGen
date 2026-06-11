@@ -7,7 +7,6 @@
 #include <cstring>
 #include <fstream>
 #include <algorithm>
-#include <codecvt>
 #include <locale>
 
 
@@ -70,8 +69,15 @@ std::vector<uint8_t> LauncherConfig::Serialize() const {
     auto appendString = [&stringData](const std::wstring& str) -> std::pair<uint32_t, uint32_t> {
         uint32_t offset = static_cast<uint32_t>(stringData.size());
         // 转换为UTF-8
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-        std::string utf8 = converter.to_bytes(str);
+        // 使用 Windows API 进行宽字符到 UTF-8 转换（替代已弃用的 std::codecvt）
+        std::string utf8;
+        if (!str.empty()) {
+            int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, nullptr, 0, nullptr, nullptr);
+            if (sizeNeeded > 0) {
+                utf8.resize(sizeNeeded - 1);
+                WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, &utf8[0], sizeNeeded - 1, nullptr, nullptr);
+            }
+        }
         uint32_t length = static_cast<uint32_t>(utf8.length());
         // 包含null终止符
         stringData.insert(stringData.end(), utf8.begin(), utf8.end());
@@ -261,19 +267,29 @@ std::wstring LauncherConfig::DeserializeString(const uint8_t* data, uint32_t off
     if (!data || length == 0 || length > GeneratorConstants::MAX_STRING_LENGTH) {
         return L"";
     }
-    try {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-        return converter.from_bytes(reinterpret_cast<const char*>(data + offset), reinterpret_cast<const char*>(data + offset + length));
-    } catch (...) {
+    // 使用 Windows API 进行 UTF-8 到宽字符转换（替代已弃用的 std::codecvt）
+    const char* utf8Data = reinterpret_cast<const char*>(data + offset);
+    int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, utf8Data, static_cast<int>(length), nullptr, 0);
+    if (sizeNeeded <= 0) {
         return L"";
     }
+    std::wstring result(sizeNeeded, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, utf8Data, static_cast<int>(length), &result[0], sizeNeeded);
+    return result;
 }
 
 void LauncherConfig::SerializeString(std::vector<uint8_t>& buffer, const std::wstring& str,
                                      uint32_t& outOffset, uint32_t& outLength) const {
     outOffset = static_cast<uint32_t>(buffer.size());
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    std::string utf8 = converter.to_bytes(str);
+    // 使用 Windows API 进行宽字符到 UTF-8 转换（替代已弃用的 std::codecvt）
+    std::string utf8;
+    if (!str.empty()) {
+        int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        if (sizeNeeded > 0) {
+            utf8.resize(sizeNeeded - 1);
+            WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, &utf8[0], sizeNeeded - 1, nullptr, nullptr);
+        }
+    }
     outLength = static_cast<uint32_t>(utf8.length());
     buffer.insert(buffer.end(), utf8.begin(), utf8.end());
     buffer.push_back(0);

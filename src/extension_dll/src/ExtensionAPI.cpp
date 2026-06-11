@@ -13,13 +13,8 @@
  * @date 2026-06-10
  */
 
-/* ========================== 宏定义 ========================== */
-
-/**
- * @def EXTENSION_DLL_BUILD
- * @brief 指示当前正在编译扩展DLL本身，使ExtensionAPI.h中的宏导出符号而非导入。
- */
-#define EXTENSION_DLL_BUILD
+// EXTENSION_DLL_BUILD 已在 CMakeLists.txt 中通过 target_compile_definitions 定义
+// 此处不再重复定义，避免 C4005 宏重复定义警告
 
 /* ========================== 头文件包含 ========================== */
 
