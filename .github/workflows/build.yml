@@ -109,9 +109,8 @@ jobs:
         with:
           name: GameLauncherGen-x86-${{matrix.build_type}}
           path: |
-            ${{github.workspace}}/build/src/generator/${{matrix.build_type}}/*.exe
-            ${{github.workspace}}/build/src/launcher_template/${{matrix.build_type}}/*.exe
-            ${{github.workspace}}/build/src/extension_dll/${{matrix.build_type}}/*.dll
+            ${{github.workspace}}/build/bin/${{matrix.build_type}}/*.exe
+            ${{github.workspace}}/build/bin/${{matrix.build_type}}/*.dll
           retention-days: 7
 
   # =========================================================================
