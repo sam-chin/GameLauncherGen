@@ -19,11 +19,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# 静态运行时库 (/MT)
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
-# MFC 静态链接
+# MFC 静态链接 (必须在 add_executable 之前)
 set(CMAKE_MFC_FLAG 2)
+
+# 静态运行时库 (/MT) - 与静态 MFC 一致
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # Unicode 编码
 add_definitions(-DUNICODE -D_UNICODE)

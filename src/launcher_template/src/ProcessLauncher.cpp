@@ -16,6 +16,7 @@
 #include "ProcessLauncher.h"
 #include <sstream>
 #include <fstream>
+#include <vector>
 
 // ---------------------------------------------------------------------------
 // 命名空间定义

@@ -2,11 +2,8 @@
 //
 #include "resource.h"
 
-/**
- * @file Generator.rc
- * @brief 游戏启动器生成器 - 资源脚本
- * @details 定义对话框模板、菜单、图标、字符串表等资源
- */
+// 游戏启动器生成器 - 资源脚本
+// 定义对话框模板、菜单、图标、字符串表等资源
 
 #define APSTUDIO_READONLY_SYMBOLS
 #include "afxres.h"
