@@ -4,6 +4,7 @@
  */
 
 #include "ConfigData.h"
+#include <Windows.h>
 #include <cstring>
 #include <fstream>
 #include <algorithm>
