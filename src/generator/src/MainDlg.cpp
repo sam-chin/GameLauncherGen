@@ -6,6 +6,8 @@
 
 #include "MainDlg.h"
 #include "resource.h"
+#include <afxdlgs.h>        // CFileDialog
+#include <shlobj.h>         // SHBrowseForFolder, BROWSEINFO
 #include <gdiplus.h>
 #include <thread>
 #include <future>
@@ -21,11 +23,7 @@ IMPLEMENT_DYNAMIC(CMainDlg, CDialogEx)
 BEGIN_MESSAGE_MAP(CMainDlg, CDialogEx)
     ON_WM_DESTROY()
     ON_CBN_SELCHANGE(IDC_COMBO_UI_STYLE, &CMainDlg::OnCbnSelchangeUiStyle)
-    ON_EN_CHANGE(IDC_EDIT_BG_IMAGE, &CMainDlg::OnEnChangeImagePath)
-    ON_EN_CHANGE(IDC_EDIT_BTN_NORMAL, &CMainDlg::OnEnChangeImagePath)
-    ON_EN_CHANGE(IDC_EDIT_BTN_HOVER, &CMainDlg::OnEnChangeImagePath)
-    ON_EN_CHANGE(IDC_EDIT_BTN_PRESSED, &CMainDlg::OnEnChangeImagePath)
-    ON_EN_CHANGE(IDC_EDIT_LOGO, &CMainDlg::OnEnChangeImagePath)
+    ON_CONTROL_RANGE(EN_CHANGE, IDC_EDIT_BG_IMAGE, IDC_EDIT_LOGO, &CMainDlg::OnEnChangeImagePath)
     ON_BN_CLICKED(IDC_BTN_BROWSE_BG, &CMainDlg::OnBnClickedBrowseBg)
     ON_BN_CLICKED(IDC_BTN_BROWSE_BTN_NORMAL, &CMainDlg::OnBnClickedBrowseBtnNormal)
     ON_BN_CLICKED(IDC_BTN_BROWSE_BTN_HOVER, &CMainDlg::OnBnClickedBrowseBtnHover)
@@ -374,7 +372,7 @@ void CMainDlg::OnEnChangeImagePath(UINT nID) {
         pEdit->GetWindowText(path);
         if (!path.IsEmpty()) {
             std::wstring error;
-            if (m_config.LoadImage(type, path.GetString(), error)) {
+            if (m_config.LoadImageFile(type, path.GetString(), error)) {
                 UpdateImagePreview(type);
             } else {
                 LogError(CString(error.c_str()));

@@ -208,7 +208,7 @@ struct LauncherConfig {
     void ClearImages();
 
     // 加载图片文件（带BMP/PNG魔数校验）
-    [[nodiscard]] bool LoadImage(ImageType type, const std::wstring& path, std::wstring& errorMessage);
+    [[nodiscard]] bool LoadImageFile(ImageType type, const std::wstring& path, std::wstring& errorMessage);
 
 private:
     // 辅助序列化函数

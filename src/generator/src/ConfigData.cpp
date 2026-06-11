@@ -320,7 +320,7 @@ void LauncherConfig::ClearImages() {
     }
 }
 
-bool LauncherConfig::LoadImage(ImageType type, const std::wstring& path, std::wstring& errorMessage) {
+bool LauncherConfig::LoadImageFile(ImageType type, const std::wstring& path, std::wstring& errorMessage) {
     size_t idx = static_cast<size_t>(type);
     if (idx >= static_cast<size_t>(ImageType::Count)) {
         errorMessage = L"无效的图片类型";

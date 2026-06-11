@@ -55,9 +55,6 @@ BOOL CGeneratorApp::InitInstance() {
         return FALSE;
     }
 
-    // 设置对话框背景颜色
-    SetDialogBkColor(RGB(240, 240, 240), RGB(0, 0, 0));
-
     // 创建并显示主对话框
     CMainDlg mainDlg;
     m_pMainWnd = &mainDlg;
