@@ -7,6 +7,9 @@
  *          使用标签页或分组框组织各个功能区域。
  */
 
+// MFC 静态链接要求：Winsock2.h 必须在 Windows.h 之前包含
+#include <Winsock2.h>
+
 #include "ConfigData.h"
 #include "ResourceEmbedder.h"
 #include "PatchBuilder.h"
