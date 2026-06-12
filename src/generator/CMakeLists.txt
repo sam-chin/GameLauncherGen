@@ -25,7 +25,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_MFC_FLAG 2)
 
 # 共享运行时库 (/MD) - VS2022 中 CMAKE_MFC_FLAG 与 /MT 不兼容
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 
 # 禁用 Windows.h 的 min/max 宏
 add_definitions(-DNOMINMAX)
