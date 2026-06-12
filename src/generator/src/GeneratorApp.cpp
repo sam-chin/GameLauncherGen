@@ -7,6 +7,12 @@
 #include "MainDlg.h"
 #include <combaseapi.h>
 
+// 手动链接 MFC 静态库时，需要提供 WinMain 入口点桥接到 AfxWinMain
+extern "C" int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                                LPSTR lpCmdLine, int nCmdShow) {
+    return AfxWinMain(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
+}
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
