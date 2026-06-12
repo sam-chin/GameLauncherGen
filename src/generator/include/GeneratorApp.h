@@ -6,6 +6,9 @@
  * @details MFC应用程序入口类，负责初始化COM、GDI+等子系统
  */
 
+// MFC 静态链接要求：Winsock2.h 必须在 Windows.h 之前包含
+#include <Winsock2.h>
+
 #ifndef VC_EXTRALEAN
 #define VC_EXTRALEAN
 #endif
