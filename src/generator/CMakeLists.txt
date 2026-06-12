@@ -1,10 +1,11 @@
 # =============================================================================
 # Generator - 游戏启动器生成器
 # =============================================================================
-# 类型: MFC 对话框应用程序 (32位, 静态链接)
+# 类型: MFC 对话框应用程序 (32位)
 # 标准: C++17
 # 编码: Unicode
-# 注意: 不使用 CMAKE_MFC_FLAG，完全手动配置 MFC 静态链接
+# 注意: 使用 CMAKE_MFC_FLAG=2 配合 /MD 共享运行时
+#       VS2022 中 CMAKE_MFC_FLAG 与 /MT 不兼容，使用 /MD 是已知可行方案
 # =============================================================================
 
 cmake_minimum_required(VERSION 3.20)
@@ -20,8 +21,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# 静态运行时库 (/MT)
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+# MFC 静态链接配置（必须在 add_executable 之前）
+set(CMAKE_MFC_FLAG 2)
+
+# 共享运行时库 (/MD) - VS2022 中 CMAKE_MFC_FLAG 与 /MT 不兼容
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
 
 # 禁用 Windows.h 的 min/max 宏
 add_definitions(-DNOMINMAX)
@@ -61,7 +65,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/include
 )
 
-# 编译选项 - /U_AFXDLL 取消 _AFXDLL 定义，强制使用静态 MFC
+# 编译选项
 target_compile_options(${PROJECT_NAME} PRIVATE
     /W4
     /MP
@@ -69,22 +73,18 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     /GR
     /Zc:wchar_t
     /permissive-
-    /U_AFXDLL
 )
 
 # Release 优化
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /GL")
-set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG /ENTRY:wWinMainCRTStartup")
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
 
 # Debug 模式
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi /Od /RTC1")
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /ENTRY:wWinMainCRTStartup")
 
-# 链接库（包含 MFC 静态库）
+# 链接库
 target_link_libraries(${PROJECT_NAME} PRIVATE
     CommonLibrary
-    $<$<CONFIG:Debug>:uafxcwd.lib>
-    $<$<CONFIG:Release>:uafxcw.lib>
     kernel32
     user32
     gdi32
@@ -121,5 +121,6 @@ install(TARGETS ${PROJECT_NAME}
 message(STATUS "========================================")
 message(STATUS "项目: ${PROJECT_NAME}")
 message(STATUS "版本: ${PROJECT_VERSION}")
-message(STATUS "MFC模式: 静态链接 (手动配置)")
+message(STATUS "MFC模式: 静态链接 (CMAKE_MFC_FLAG=2)")
+message(STATUS "运行时: /MD (共享)")
 message(STATUS "========================================")
