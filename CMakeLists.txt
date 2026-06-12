@@ -42,6 +42,9 @@ if(MSVC)
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG /OPT:REF /OPT:ICF")
 endif()
 
+# MFC 静态链接（全局设置，必须在 add_subdirectory 之前）
+set(CMAKE_MFC_FLAG 2)
+
 # 全局包含目录
 set(COMMON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/common/include)
 
